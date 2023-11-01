@@ -7,6 +7,11 @@
     <h2>
       <%= day_and_time(@movie) %> &bull; <%= @movie.rating %>
     </h2>
+    <div class="reviews">
+      <%= render "shared/stars", percent: @movie.average_stars_as_percent %>
+      <%= link_to pluralize(@movie.reviews.size, "review"),
+            movie_reviews_path(@movie) %>
+    </div>
     <p>
       <%= @movie.description %>
     </p>
@@ -24,8 +29,14 @@
         <td><%= total_gross(@movie) %></td>
       </tr>
     </table>
+    <%= link_to "Write Review", new_movie_review_path(@movie),
+              class: "review" %>
+              <!--<%= render "reviews/form", review: @review %> -->
   </div>
 </section>
+
+
+
 
 <section class="admin">
   <%= link_to "Edit", edit_movie_path(@movie), class: "button" %>

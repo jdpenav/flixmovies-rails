@@ -9,6 +9,9 @@
       </h2>
       <br>
       <h3>
+        <span class="stars">
+          <%= render "shared/stars", percent: movie.average_stars_as_percent %>
+        </span>
         <%= total_gross(movie) %> | <%= movie.rating %>
       </h3>
       <p>

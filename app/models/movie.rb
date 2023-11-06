@@ -1,4 +1,5 @@
 class Movie < ApplicationRecord
+    before_save :set_slug
 
     has_many :reviews, dependent: :destroy
     has_many :favorites, dependent: :destroy
@@ -6,7 +7,7 @@ class Movie < ApplicationRecord
     has_many :characterizations, dependent: :destroy
     has_many :genres, through: :characterizations
 
-    validates :title, :released_on, :duration, presence: true
+    validates :title, :released_on,  presence: true, uniqueness: true
 
     validates :description, length: { minimum: 25 }
 
@@ -39,9 +40,17 @@ class Movie < ApplicationRecord
       (self.average_stars / 5.0) * 100
     end
 
+    def to_param
+      slug
+    end
+
     #def self.released
     #  where("released_on < ?", Time.now).order("released_on desc")
     #end
+
+    def set_slug
+      self.slug = title.parameterize
+    end
 
     def flop?
         total_gross.blank? || total_gross < 225_000_000

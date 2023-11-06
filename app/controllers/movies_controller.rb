@@ -2,6 +2,7 @@ class MoviesController < ApplicationController
 
     before_action :require_signin, except: [:index, :show]
     before_action :require_admin, except: [:index, :show]
+    before_action :set_movie, only: [:show, :edit, :update, :destroy]
 
     
       def index
@@ -21,7 +22,6 @@ class MoviesController < ApplicationController
       
     
       def show
-        @movie = Movie.find(params[:id])
         @review = @movie.reviews.new
         @fans = @movie.fans
         @genres = @movie.genres.order(:name)
@@ -33,7 +33,6 @@ class MoviesController < ApplicationController
       end
     
       def edit
-        @movie = Movie.find(params[:id])
       end
     
       def update
@@ -59,7 +58,6 @@ class MoviesController < ApplicationController
       end
     
       def destroy
-        @movie = Movie.find(params[:id])
         @movie.destroy
         redirect_to movies_url, status: :see_other,
           alert: "Movie successfully deleted!"
@@ -71,5 +69,9 @@ class MoviesController < ApplicationController
         params.require(:movie).
           permit(:title, :description, :rating, :released_on, :total_gross,
                   :director, :duration, :image_file_name, genre_ids: [])
-      end
+    end
+
+    def set_movie
+      @movie = Movie.find_by!(slug: params[:id])
+    end
 end
